@@ -1,5 +1,4 @@
 import 'package:ammar/view/screen/homescreen.dart';
-import 'package:ammar/view/screen/test.dart';
 import 'package:flutter/material.dart';
 
 void main() {

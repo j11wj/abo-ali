@@ -25,10 +25,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? mgrs;
   double? y, x;
-  File? _image;
+  List<File>? _image = [];
   final picker = ImagePicker();
   Uint8List? imagebytes;
-  String? img64;
+  List<String>? img64 = [];
   List<String> department = [
     'قسم التقنيات والمعلوماتية بابل',
     'قسم استخبارات الحلة',
@@ -159,9 +159,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.transparent,
                   ),
                   child: img64 != null
-                      ? Image.memory(
-                          _imageByte(img64!),
-                          fit: BoxFit.cover,
+                      ? ListView.builder(
+                          shrinkWrap: false,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: img64!.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 2),
+                            child: Image.memory(
+                              _imageByte(img64![index]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         )
                       : Center(
                           child: Container(
@@ -286,8 +295,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           numberOfCamera.clear();
                           note.clear();
                           inventorySide.clear();
-                          _image = null;
-                          img64 = null;
+                          _image = [];
+                          img64 = [];
                         });
 
                         // ignore: use_build_context_synchronously
@@ -358,8 +367,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         numberOfCamera.clear();
                         note.clear();
                         inventorySide.clear();
-                        _image = null;
-                        img64 = null;
+                        _image = [];
+                        img64 = [];
                       });
                       // ignore: use_build_context_synchronously
                       showDialog(
@@ -428,8 +437,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       numberOfCamera.clear();
                       note.clear();
                       inventorySide.clear();
-                      _image = null;
-                      img64 = null;
+                      _image = [];
+                      img64 = [];
                     });
                     // ignore: use_build_context_synchronously
                     showDialog(
@@ -459,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> adddatafile(
-      {required File image,
+      {required List<File> image,
       required List<CellValue> data,
       required String imageName}) async {
     Excel? excel;
@@ -512,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 // دالة لحفظ الصورة في فولدر محدد
   Future<void> saveImageToFolder(
-      File imageFile, String folderName, String imagen) async {
+      List<File> imageFile, String folderName, String imagen) async {
     // الحصول على مسار الفولدر الرئيسي للتطبيق
     // Directory appDocDir = '/storage/emulated/0/Download';
 
@@ -525,7 +534,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // حفظ الصورة في الفولدر المحدد
-    File newImage = await imageFile.copy('$folderPath/$imagen.jpg');
+    for (int i = 0; i < imageFile.length; i++) {
+      File newImage = await imageFile[i].copy('$folderPath/$imagen $i.jpg');
+    }
     // يمكنك استخدام اسم مختلف للصورة أو تمديد ملف مختلف حسب الحاجة
   }
 
@@ -558,10 +569,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Future getImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
     setState(() {
-      _image = File(pickedFile!.path);
+      _image!.add(File(pickedFile!.path));
     });
-    imagebytes = File(_image!.path).readAsBytesSync();
-    img64 = base64Encode(imagebytes!);
+    imagebytes = File(_image![_image!.length - 1].path).readAsBytesSync();
+    img64!.add(base64Encode(imagebytes!));
   }
 
   setXandY(double lat, double long) {
