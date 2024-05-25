@@ -25,10 +25,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? mgrs;
   double? y, x;
-  List<File>? _image = [];
+  final List<File> _image = [];
   final picker = ImagePicker();
   Uint8List? imagebytes;
-  List<String>? img64 = [];
+  List<String> img64 = [];
   List<String> department = [
     'قسم التقنيات والمعلوماتية بابل',
     'قسم استخبارات الحلة',
@@ -153,21 +153,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Container(
-                  height: img64 != null ? 300 : null,
+                  height: img64.isNotEmpty ? 300 : null,
                   width: 300,
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                   ),
-                  child: img64 != null
+                  child: img64.isNotEmpty
                       ? ListView.builder(
                           shrinkWrap: false,
                           scrollDirection: Axis.horizontal,
-                          itemCount: img64!.length,
+                          itemCount: img64.length,
                           itemBuilder: (context, index) => Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 14, vertical: 2),
                             child: Image.memory(
-                              _imageByte(img64![index]),
+                              _imageByte(img64[index]),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -228,8 +228,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       x == null ||
                       y == null ||
                       mgrs == null ||
-                      img64 == null ||
-                      _image == null) {
+                      img64.isEmpty ||
+                      _image.isEmpty) {
                     print("object");
                     showDialog(
                       context: context,
@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         await adddatafile(
                             imageName: tradeName.text,
                             // image
-                            image: _image!,
+                            image: _image,
                             data: [
                               // الاسم التجاري
                               TextCellValue(tradeName.text),
@@ -295,8 +295,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           numberOfCamera.clear();
                           note.clear();
                           inventorySide.clear();
-                          _image = [];
-                          img64 = [];
                         });
 
                         // ignore: use_build_context_synchronously
@@ -322,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       await adddatafile(
                           imageName: tradeName.text,
                           // image
-                          image: _image!,
+                          image: _image,
                           data: [
                             // الاسم التجاري
                             TextCellValue(tradeName.text),
@@ -367,8 +365,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         numberOfCamera.clear();
                         note.clear();
                         inventorySide.clear();
-                        _image = [];
-                        img64 = [];
                       });
                       // ignore: use_build_context_synchronously
                       showDialog(
@@ -392,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     await adddatafile(
                         imageName: tradeName.text,
                         // image
-                        image: _image!,
+                        image: _image,
                         data: [
                           // الاسم التجاري
                           TextCellValue(tradeName.text),
@@ -437,8 +433,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       numberOfCamera.clear();
                       note.clear();
                       inventorySide.clear();
-                      _image = [];
-                      img64 = [];
                     });
                     // ignore: use_build_context_synchronously
                     showDialog(
@@ -507,6 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ];
       sheetObject.appendRow(heders);
     }
+    saveImageToFolder(image, 'images', '${imageName}__${sheetObject.maxRows}');
     sheetObject.appendRow(data);
 
     print(sheetObject.maxRows);
@@ -516,7 +511,6 @@ class _HomeScreenState extends State<HomeScreen> {
     File(join('$path/dat.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
-    saveImageToFolder(image, 'images', '${imageName}__${sheetObject.maxRows}');
   }
 
 // دالة لحفظ الصورة في فولدر محدد
@@ -534,9 +528,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // حفظ الصورة في الفولدر المحدد
-    for (int i = 0; i < imageFile.length; i++) {
-      File newImage = await imageFile[i].copy('$folderPath/$imagen $i.jpg');
+    for (int i = 0; i < _image.length; i++) {
+      // ignore: unused_local_variable
+      File newImage = await _image[i].copy('$folderPath/$imagen $i.jpg');
+      print('$folderPath $folderName =========');
     }
+    setState(() {
+      _image.clear();
+      img64.clear();
+    });
+
     // يمكنك استخدام اسم مختلف للصورة أو تمديد ملف مختلف حسب الحاجة
   }
 
@@ -569,10 +570,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Future getImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
     setState(() {
-      _image!.add(File(pickedFile!.path));
+      _image.add(File(pickedFile!.path));
+      img64.add(base64Encode(imagebytes!));
     });
-    imagebytes = File(_image![_image!.length - 1].path).readAsBytesSync();
-    img64!.add(base64Encode(imagebytes!));
+    imagebytes = File(_image[_image.length - 1].path).readAsBytesSync();
   }
 
   setXandY(double lat, double long) {

@@ -1,4 +1,4 @@
-import 'package:ammar/view/screen/pdf.dart';
+import 'package:ammar/view/screen/homescreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,12 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ammar',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const pdf(),
+      home: const HomeScreen(),
     );
   }
 }
