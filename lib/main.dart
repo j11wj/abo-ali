@@ -1,4 +1,4 @@
-import 'package:ammar/view/screen/homescreen.dart';
+import 'package:ammar/view/screen/pdf.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const pdf(),
     );
   }
 }

@@ -473,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
       required String imageName}) async {
     Excel? excel;
 
-    var directory = await getApplicationCacheDirectory();
+    // var directory = await getApplicationCacheDirectory();
 
     String path = '/storage/emulated/0/Download';
     String filePath = '$path/dat.xlsx';
