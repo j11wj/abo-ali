@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:ammar/models/location_servise.dart';
 import 'package:ammar/view/widgets/DropDownButtonWidget.dart';
+
 import 'package:ammar/view/widgets/textfieldwidget.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,7 @@ import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:mgrs_dart/mgrs_dart.dart';
 import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,12 +25,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? mgrs;
   double? y, x;
-  final List<File> _image = [];
-  final picker = ImagePicker();
-  Uint8List? imagebytes;
-  List<String> img64 = [];
+
+  File? Pledge;
+  File? image1;
+  File? Form;
+  File? IdentityInterface;
+  File? IdentityBackground;
+  File? CardInterface;
+  File? CardBackground;
+  File? Other;
+
   List<String> department = [
     'قسم التقنيات والمعلوماتية بابل',
     'قسم استخبارات الحلة',
@@ -39,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'قسم استخبارات المحاويل',
     'قسم استخبارات  المسيب',
   ];
+  String? mgrs;
   @override
   void initState() {
     super.initState();
@@ -149,55 +157,121 @@ class _HomeScreenState extends State<HomeScreen> {
                     getLocation();
                   },
                   child: const Text('جلب الموقع')),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
-                  height: img64.isNotEmpty ? 300 : null,
-                  width: 300,
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: img64.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: false,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: img64.length,
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 2),
-                            child: Image.memory(
-                              _imageByte(img64[index]),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                      : Center(
-                          child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red[300],
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: Text(
-                              'يرجى اخيار صوره',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        )),
-                ),
+              //////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              /////////////////////////////////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              /////////////////////////////////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              ///////////////////////////
+              Pledge != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(Pledge!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImagePledge,
+                child: const Text(' صورةالتعهد'),
               ),
-              FilledButton(
-                  onPressed: () {
-                    setState(() {
-                      getImageFromGallery();
-                    });
-                  },
-                  child: const Text('جلب الصوره')),
+              Form != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(Form!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImageForm,
+                child: const Text('صورة الاستمارة'),
+              ),
+              IdentityInterface != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(IdentityInterface!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImageIdentityInterFace,
+                child: const Text('صورة الهويه الامامية'),
+              ),
+              IdentityBackground != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(IdentityBackground!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImageIdentityBackground,
+                child: const Text('صورة الهوية الخلفية'),
+              ),
+              CardInterface != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(CardInterface!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImageCardInterface,
+                child: const Text('صورة البطاقة الامامية'),
+              ),
+              CardBackground != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(CardBackground!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImageCardBackground,
+                child: const Text('صورة البطاقة الخلفية'),
+              ),
+              Other != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 18),
+                      child: Image.file(Other!),
+                    )
+                  : const Text('لم يتم التقاط صورة بعد'),
+              ElevatedButton(
+                onPressed: _pickImageOther,
+                child: const Text('صورة اخرى'),
+              ),
+              //////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              /////////////////////////////////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              /////////////////////////////////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              /////////////////////////////////////////////////
+              //////////////////////////
+              //////////////////
+              ///////////////////////
+              ////////////////////////////
+              ///////////////////////////
+              const SizedBox(height: 20),
               TextFieldWidget(
                 hint: 'تاريخ الجرد   $date',
                 controller: inventorydate,
@@ -227,9 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       nameOFTheInventoryHolder.text.isEmpty ||
                       x == null ||
                       y == null ||
-                      mgrs == null ||
-                      img64.isEmpty ||
-                      _image.isEmpty) {
+                      mgrs == null) {
                     print("object");
                     showDialog(
                       context: context,
@@ -238,202 +310,56 @@ class _HomeScreenState extends State<HomeScreen> {
                         content: Text('يرجى مراجعه الحقوول هنالك حقل فارغ'),
                       ),
                     );
-                  } else if (year == selectedDate.year) {
-                    print('السنه مطابقه');
-                    if (month == selectedDate.month) {
-                      print('الشهر مطابقه');
+                  } else if (year >= selectedDate.year ||
+                      month >= selectedDate.month ||
+                      day > selectedDate.day) {
+                    await adddatafile(imageName: tradeName.text, data: [
+                      // الاسم التجاري
+                      TextCellValue(tradeName.text),
 
-                      if (day > selectedDate.day) {
-                        print(' ابقه');
+                      //نوع الموقع
+                      TextCellValue(locationType.text),
+                      //اسم صاحب الموقع
+                      TextCellValue(nameOfTheSiteOwner.text),
+                      //نوع الكامرات
+                      TextCellValue(cameraType.text),
 
-                        await adddatafile(
-                            imageName: tradeName.text,
-                            // image
-                            image: _image,
-                            data: [
-                              // الاسم التجاري
-                              TextCellValue(tradeName.text),
+                      //العدد
+                      TextCellValue(numberOfCamera.text),
 
-                              //نوع الموقع
-                              TextCellValue(locationType.text),
-                              //اسم صاحب الموقع
-                              TextCellValue(nameOfTheSiteOwner.text),
-                              //نوع الكامرات
-                              TextCellValue(cameraType.text),
+                      //رقم الموبايل
+                      TextCellValue(mobileNumber.text),
 
-                              //العدد
-                              TextCellValue(numberOfCamera.text),
+                      //اسم القائم بالجرد
+                      TextCellValue(nameOFTheInventoryHolder.text),
 
-                              //رقم الموبايل
-                              TextCellValue(mobileNumber.text),
+                      //جهة الجرد
+                      TextCellValue(DropDownButtonWidget.retvalue),
 
-                              //اسم القائم بالجرد
-                              TextCellValue(nameOFTheInventoryHolder.text),
+                      //الاحداثي x,y
+                      TextCellValue('x=$x,y=$y'),
 
-                              //جهة الجرد
-                              TextCellValue(DropDownButtonWidget.retvalue),
+                      //الاحداثي mgrs
+                      TextCellValue(mgrs!),
 
-                              //الاحداثي x,y
-                              TextCellValue('x=$x,y=$y'),
+                      //تاريخ الجرد
+                      TextCellValue(date),
 
-                              //الاحداثي mgrs
-                              TextCellValue(mgrs!),
-
-                              //تاريخ الجرد
-                              TextCellValue(date),
-
-                              //الملاحظات
-                              TextCellValue(note.text),
-                            ]);
-                        setState(() {
-                          tradeName.clear();
-                          locationType.clear();
-                          cameraType.clear();
-
-                          mobileNumber.clear();
-                          nameOfTheSiteOwner.clear();
-                          numberOfCamera.clear();
-                          note.clear();
-                          inventorySide.clear();
-                        });
-
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          context: context,
-                          builder: (context) => const AlertDialog(
-                            icon: Icon(Icons.done),
-                            title: Text('تمت اضافه البيانات بنجاح'),
-                          ),
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const AlertDialog(
-                            title: Icon(Icons.error),
-                            content: Text('يرجى مراجعه القسم للتحديث'),
-                          ),
-                        );
-                      }
-                    } else if (month > selectedDate.month) {
-                      print('الشهر اصغر');
-
-                      await adddatafile(
-                          imageName: tradeName.text,
-                          // image
-                          image: _image,
-                          data: [
-                            // الاسم التجاري
-                            TextCellValue(tradeName.text),
-
-                            //نوع الموقع
-                            TextCellValue(locationType.text),
-                            //اسم صاحب الموقع
-                            TextCellValue(nameOfTheSiteOwner.text),
-                            //نوع الكامرات
-                            TextCellValue(cameraType.text),
-
-                            //العدد
-                            TextCellValue(numberOfCamera.text),
-
-                            //رقم الموبايل
-                            TextCellValue(mobileNumber.text),
-
-                            //اسم القائم بالجرد
-                            TextCellValue(nameOFTheInventoryHolder.text),
-
-                            //جهة الجرد
-                            TextCellValue(DropDownButtonWidget.retvalue),
-                            //الاحداثي x,y
-                            TextCellValue('x=$x,y=$y'),
-
-                            //الاحداثي mgrs
-                            TextCellValue(mgrs!),
-
-                            //تاريخ الجرد
-                            TextCellValue(date),
-
-                            //الملاحظات
-                            TextCellValue(note.text),
-                          ]);
-                      setState(() {
-                        cameraType.clear();
-
-                        tradeName.clear();
-                        locationType.clear();
-                        mobileNumber.clear();
-                        nameOfTheSiteOwner.clear();
-                        numberOfCamera.clear();
-                        note.clear();
-                        inventorySide.clear();
-                      });
-                      // ignore: use_build_context_synchronously
-                      showDialog(
-                        context: context,
-                        builder: (context) => const AlertDialog(
-                          icon: Icon(Icons.done),
-                          title: Text('تمت اضافه البيانات بنجاح'),
-                        ),
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const AlertDialog(
-                          title: Icon(Icons.error),
-                          content: Text('يرجى مراجعه القسم للتحديث'),
-                        ),
-                      );
-                    }
-                  } else if (year > selectedDate.year) {
-                    print('السنه اصغر');
-                    await adddatafile(
-                        imageName: tradeName.text,
-                        // image
-                        image: _image,
-                        data: [
-                          // الاسم التجاري
-                          TextCellValue(tradeName.text),
-
-                          //نوع الموقع
-                          TextCellValue(locationType.text),
-                          //اسم صاحب الموقع
-                          TextCellValue(nameOfTheSiteOwner.text),
-                          //نوع الكامرات
-                          TextCellValue(cameraType.text),
-
-                          //العدد
-                          TextCellValue(numberOfCamera.text),
-
-                          //رقم الموبايل
-                          TextCellValue(mobileNumber.text),
-
-                          //اسم القائم بالجرد
-                          TextCellValue(nameOFTheInventoryHolder.text),
-
-                          //جهة الجرد
-                          TextCellValue(DropDownButtonWidget.retvalue),
-
-                          //الاحداثي x,y
-                          TextCellValue('x=$x,y=$y'),
-
-                          //الاحداثي mgrs
-                          TextCellValue(mgrs!),
-
-                          //تاريخ الجرد
-                          TextCellValue(date),
-
-                          //الملاحظات
-                          TextCellValue(note.text),
-                        ]);
+                      //الملاحظات
+                      TextCellValue(note.text),
+                    ]);
                     setState(() {
-                      cameraType.clear();
                       tradeName.clear();
                       locationType.clear();
+                      cameraType.clear();
+
                       mobileNumber.clear();
                       nameOfTheSiteOwner.clear();
                       numberOfCamera.clear();
                       note.clear();
                       inventorySide.clear();
                     });
+
                     // ignore: use_build_context_synchronously
                     showDialog(
                       context: context,
@@ -462,9 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> adddatafile(
-      {required List<File> image,
-      required List<CellValue> data,
-      required String imageName}) async {
+      {required List<CellValue> data, required String imageName}) async {
     Excel? excel;
 
     // var directory = await getApplicationCacheDirectory();
@@ -501,44 +425,26 @@ class _HomeScreenState extends State<HomeScreen> {
       ];
       sheetObject.appendRow(heders);
     }
-    saveImageToFolder(image, 'images', '${imageName}__${sheetObject.maxRows}');
+
     sheetObject.appendRow(data);
 
     print(sheetObject.maxRows);
 
     var fileBytes = excel.save();
-
+    _saveImageToDirectory(Pledge!, '$imageName __${sheetObject.maxRows} تعهد');
+    _saveImageToDirectory(Form!, '$imageName __${sheetObject.maxRows} استمارة');
+    _saveImageToDirectory(
+        IdentityInterface!, '$imageName __${sheetObject.maxRows} هويه اماميه');
+    _saveImageToDirectory(
+        IdentityBackground!, '$imageName __${sheetObject.maxRows} هويه خلفيه');
+    _saveImageToDirectory(
+        CardInterface!, '$imageName __${sheetObject.maxRows} بطاقة اماميه');
+    _saveImageToDirectory(
+        CardBackground!, '$imageName __${sheetObject.maxRows} بطاقه خلفيه');
+    _saveImageToDirectory(Other!, '$imageName اخرى');
     File(join('$path/dat.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
-  }
-
-// دالة لحفظ الصورة في فولدر محدد
-  Future<void> saveImageToFolder(
-      List<File> imageFile, String folderName, String imagen) async {
-    // الحصول على مسار الفولدر الرئيسي للتطبيق
-    // Directory appDocDir = '/storage/emulated/0/Download';
-
-    // تحديد مسار الفولدر المطلوب
-    String folderPath = '/storage/emulated/0/Download/$folderName';
-
-    // التحقق مما إذا كان الفولدر موجودًا، وإن لم يكن، قم بإنشائه
-    if (!(await Directory(folderPath).exists())) {
-      await Directory(folderPath).create(recursive: true);
-    }
-
-    // حفظ الصورة في الفولدر المحدد
-    for (int i = 0; i < _image.length; i++) {
-      // ignore: unused_local_variable
-      File newImage = await _image[i].copy('$folderPath/$imagen $i.jpg');
-      print('$folderPath $folderName =========');
-    }
-    setState(() {
-      _image.clear();
-      img64.clear();
-    });
-
-    // يمكنك استخدام اسم مختلف للصورة أو تمديد ملف مختلف حسب الحاجة
   }
 
   void convertMGRS({required double x, required double y}) {
@@ -548,7 +454,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     var accuracy = 5;
 
-    // LonLat to MGRS string (results String)
     mgrs = Mgrs.forward(point, accuracy);
   }
 
@@ -562,23 +467,103 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Uint8List _imageByte(String image) {
-    Uint8List imageByte = base64Decode(image);
-    return imageByte;
-  }
-
-  Future getImageFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _image.add(File(pickedFile!.path));
-      img64.add(base64Encode(imagebytes!));
-    });
-    imagebytes = File(_image[_image.length - 1].path).readAsBytesSync();
-  }
-
   setXandY(double lat, double long) {
     x = long;
     y = lat;
     convertMGRS(x: x!, y: y!);
+  }
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImageForm() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        Form = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImageIdentityInterFace() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        IdentityInterface = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImageIdentityBackground() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        IdentityBackground = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImageCardInterface() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        CardInterface = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImageCardBackground() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        CardBackground = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImagePledge() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        Pledge = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImageOther() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        Other = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<File?> _saveImageToDirectory(
+      File imageFile, String nameOFImage) async {
+    try {
+      // مسار المجلد المطلوب
+      const String dirPath = '/storage/emulated/0/Download/images';
+      final Directory directory = Directory(dirPath);
+
+      // تحقق من وجود المجلد، إذا لم يكن موجودًا قم بإنشائه
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+
+      // مسار الصورة داخل المجلد
+      final String imagePath = path.join(dirPath, '$nameOFImage.jpg');
+      final File savedImage = await imageFile.copy(imagePath);
+      return savedImage;
+    } catch (e) {
+      print('Error saving image: $e');
+      return null;
+    }
   }
 }
