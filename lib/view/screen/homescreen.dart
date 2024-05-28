@@ -445,6 +445,16 @@ class _HomeScreenState extends State<HomeScreen> {
     File(join('$path/dat.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
+
+    setState(() {
+      Pledge = null;
+      Form = null;
+      IdentityBackground = null;
+      IdentityInterface = null;
+      CardInterface = null;
+      CardBackground = null;
+      Other = null;
+    });
   }
 
   void convertMGRS({required double x, required double y}) {
