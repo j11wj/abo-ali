@@ -181,7 +181,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImagePledge,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImagePledge(tradeName.text);
+                  }
+                },
                 child: const Text(' صورةالتعهد'),
               ),
               Form != null
@@ -192,7 +204,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImageForm,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImageForm(tradeName.text);
+                  }
+                },
                 child: const Text('صورة الاستمارة'),
               ),
               IdentityInterface != null
@@ -203,7 +227,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImageIdentityInterFace,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImageIdentityInterFace(tradeName.text);
+                  }
+                },
                 child: const Text('صورة الهويه الامامية'),
               ),
               IdentityBackground != null
@@ -214,7 +250,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImageIdentityBackground,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImageIdentityBackground(tradeName.text);
+                  }
+                },
                 child: const Text('صورة الهوية الخلفية'),
               ),
               CardInterface != null
@@ -225,7 +273,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImageCardInterface,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImageCardInterface(tradeName.text);
+                  }
+                },
                 child: const Text('صورة البطاقة الامامية'),
               ),
               CardBackground != null
@@ -236,7 +296,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImageCardBackground,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImageCardBackground(tradeName.text);
+                  }
+                },
                 child: const Text('صورة البطاقة الخلفية'),
               ),
               Other != null
@@ -247,7 +319,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : const Text('لم يتم التقاط صورة بعد'),
               ElevatedButton(
-                onPressed: _pickImageOther,
+                onPressed: () async {
+                  if (tradeName.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        title: Icon(Icons.error),
+                        content: Text('يرجى ملىء حقل الاسم لانه  فارغ'),
+                      ),
+                    );
+                  } else {
+                    _pickImageOther(tradeName.text);
+                  }
+                },
                 child: const Text('صورة اخرى'),
               ),
               //////////////////////
@@ -313,7 +397,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else if (year >= selectedDate.year ||
                       month >= selectedDate.month ||
                       day > selectedDate.day) {
-                    await adddatafile(imageName: tradeName.text, data: [
+                    await adddatafile(data: [
                       // الاسم التجاري
                       TextCellValue(tradeName.text),
 
@@ -387,8 +471,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> adddatafile(
-      {required List<CellValue> data, required String imageName}) async {
+  Future<void> adddatafile({
+    required List<CellValue> data,
+  }) async {
     Excel? excel;
 
     // var directory = await getApplicationCacheDirectory();
@@ -431,17 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print(sheetObject.maxRows);
 
     var fileBytes = excel.save();
-    _saveImageToDirectory(Pledge!, '$imageName __${sheetObject.maxRows} تعهد');
-    _saveImageToDirectory(Form!, '$imageName __${sheetObject.maxRows} استمارة');
-    _saveImageToDirectory(
-        IdentityInterface!, '$imageName __${sheetObject.maxRows} هويه اماميه');
-    _saveImageToDirectory(
-        IdentityBackground!, '$imageName __${sheetObject.maxRows} هويه خلفيه');
-    _saveImageToDirectory(
-        CardInterface!, '$imageName __${sheetObject.maxRows} بطاقة اماميه');
-    _saveImageToDirectory(
-        CardBackground!, '$imageName __${sheetObject.maxRows} بطاقه خلفيه');
-    _saveImageToDirectory(Other!, '$imageName اخرى');
+
     File(join('$path/dat.xlsx'))
       ..createSync(recursive: true)
       ..writeAsBytesSync(fileBytes!);
@@ -485,7 +560,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImageForm() async {
+  Future<void> _pickImageForm(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -493,9 +568,10 @@ class _HomeScreenState extends State<HomeScreen> {
         Form = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(Form!, '$name __ استمارة');
   }
 
-  Future<void> _pickImageIdentityInterFace() async {
+  Future<void> _pickImageIdentityInterFace(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -503,9 +579,10 @@ class _HomeScreenState extends State<HomeScreen> {
         IdentityInterface = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(IdentityInterface!, '$name __ وجهة الهوية الامامي');
   }
 
-  Future<void> _pickImageIdentityBackground() async {
+  Future<void> _pickImageIdentityBackground(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -513,9 +590,10 @@ class _HomeScreenState extends State<HomeScreen> {
         IdentityBackground = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(IdentityBackground!, '$name __ وجهة الهوية الخلفي');
   }
 
-  Future<void> _pickImageCardInterface() async {
+  Future<void> _pickImageCardInterface(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -523,9 +601,10 @@ class _HomeScreenState extends State<HomeScreen> {
         CardInterface = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(CardInterface!, '$name __ وجهة البطاقة الامامي');
   }
 
-  Future<void> _pickImageCardBackground() async {
+  Future<void> _pickImageCardBackground(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -533,9 +612,10 @@ class _HomeScreenState extends State<HomeScreen> {
         CardBackground = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(CardBackground!, '$name __ وجهة البطاقة الخلفي ');
   }
 
-  Future<void> _pickImagePledge() async {
+  Future<void> _pickImagePledge(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -543,9 +623,10 @@ class _HomeScreenState extends State<HomeScreen> {
         Pledge = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(Pledge!, '$name __ تعهد');
   }
 
-  Future<void> _pickImageOther() async {
+  Future<void> _pickImageOther(String name) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
@@ -553,6 +634,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Other = File(pickedFile.path);
       });
     }
+    _saveImageToDirectory(Other!, '$name __ اخرى');
   }
 
   Future<File?> _saveImageToDirectory(
